@@ -20,6 +20,7 @@ interface TaskStore {
   completeTask: (id: string) => void;
   deleteTask: (id: string) => void;
   resetTask: (id: string) => void;
+  reorderTasks: (sourceId: string, targetId: string) => void;
 }
 
 export const useTaskStore = create<TaskStore>()(
@@ -105,6 +106,23 @@ export const useTaskStore = create<TaskStore>()(
               : task
           ),
         }));
+      },
+
+      reorderTasks: (sourceId: string, targetId: string) => {
+        set((state) => {
+          const tasks = [...state.tasks];
+          const fromIndex = tasks.findIndex((task) => task.id === sourceId);
+          const toIndex = tasks.findIndex((task) => task.id === targetId);
+
+          if (fromIndex === -1 || toIndex === -1 || fromIndex === toIndex) {
+            return state;
+          }
+
+          const [moved] = tasks.splice(fromIndex, 1);
+          tasks.splice(toIndex, 0, moved);
+
+          return { tasks };
+        });
       },
     }),
     {

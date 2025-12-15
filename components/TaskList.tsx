@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import { Play, Pause, Check, RotateCcw, Trash2 } from 'lucide-react';
 import Link from 'next/link';
 import { useTaskStore, Task } from '@/store/taskStore';
@@ -11,6 +12,10 @@ export default function TaskList() {
   const completeTask = useTaskStore((state) => state.completeTask);
   const deleteTask = useTaskStore((state) => state.deleteTask);
   const resetTask = useTaskStore((state) => state.resetTask);
+  const reorderTasks = useTaskStore((state) => state.reorderTasks);
+
+  const [draggingId, setDraggingId] = useState<string | null>(null);
+   const [dropTargetId, setDropTargetId] = useState<string | null>(null);
 
   const activeTasks = tasks.filter((task) => task.status !== 'completed');
   const runningTask = tasks.find((task) => task.status === 'running');
@@ -67,9 +72,46 @@ export default function TaskList() {
         {activeTasks.map((task) => (
           <div
             key={task.id}
-            className={`border border-black p-3 font-mono text-sm ${
-              task.status === 'running' ? 'bg-international-orange bg-opacity-10 border-international-orange' : 'bg-white'
+            className={`border p-3 font-mono text-sm transition-all duration-150 cursor-grab ${
+              task.status === 'running'
+                ? 'bg-international-orange bg-opacity-10 border-international-orange'
+                : 'bg-white border-black'
+            } ${
+              draggingId === task.id
+                ? 'cursor-grabbing opacity-80 ring-2 ring-international-orange'
+                : ''
+            } ${
+              dropTargetId === task.id && draggingId && draggingId !== task.id
+                ? 'border-dashed border-2 border-international-orange bg-orange-50'
+                : ''
             }`}
+            draggable
+            onDragStart={() => {
+              setDraggingId(task.id);
+            }}
+            onDragOver={(e) => {
+              e.preventDefault();
+              if (draggingId && draggingId !== task.id && dropTargetId !== task.id) {
+                setDropTargetId(task.id);
+              }
+            }}
+            onDrop={(e) => {
+              e.preventDefault();
+              if (draggingId && draggingId !== task.id) {
+                reorderTasks(draggingId, task.id);
+              }
+              setDraggingId(null);
+              setDropTargetId(null);
+            }}
+            onDragLeave={() => {
+              if (dropTargetId === task.id) {
+                setDropTargetId(null);
+              }
+            }}
+            onDragEnd={() => {
+              setDraggingId(null);
+              setDropTargetId(null);
+            }}
           >
             <div className="flex items-center justify-between mb-2">
               <div className="flex-1">
