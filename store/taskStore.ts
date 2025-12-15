@@ -21,6 +21,7 @@ interface TaskStore {
   deleteTask: (id: string) => void;
   resetTask: (id: string) => void;
   reorderTasks: (sourceId: string, targetId: string) => void;
+  updateTaskMeta: (id: string, updates: Partial<Pick<Task, 'title' | 'estimateMinutes'>>) => void;
 }
 
 export const useTaskStore = create<TaskStore>()(
@@ -123,6 +124,14 @@ export const useTaskStore = create<TaskStore>()(
 
           return { tasks };
         });
+      },
+
+      updateTaskMeta: (id: string, updates: Partial<Pick<Task, 'title' | 'estimateMinutes'>>) => {
+        set((state) => ({
+          tasks: state.tasks.map((task) =>
+            task.id === id ? { ...task, ...updates } : task
+          ),
+        }));
       },
     }),
     {

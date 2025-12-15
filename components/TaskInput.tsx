@@ -77,6 +77,20 @@ export default function TaskInput() {
                 }
               }
             }}
+            onKeyDown={(e) => {
+              if (e.key !== 'ArrowUp' && e.key !== 'ArrowDown') return;
+
+              e.preventDefault();
+              const step = e.shiftKey ? 10 : 1;
+              const current = estimateMinutes || 0;
+              const next =
+                e.key === 'ArrowUp'
+                  ? Math.max(1, current + step)
+                  : Math.max(1, current - step);
+
+              setEstimateMinutes(next);
+              setEstimateInput(String(next));
+            }}
             min="1"
             className="w-full border border-black px-3 py-2 bg-white focus:outline-none focus:border-international-orange font-mono"
             placeholder="Custom limit (minutes)"
