@@ -7,18 +7,27 @@ import { useTaskStore } from '@/store/taskStore';
 export default function TaskInput() {
   const [title, setTitle] = useState('');
   const [estimateMinutes, setEstimateMinutes] = useState<number>(15);
+  const [estimateInput, setEstimateInput] = useState<string>('15');
   const addTask = useTaskStore((state) => state.addTask);
 
   const handlePreset = (minutes: number) => {
     setEstimateMinutes(minutes);
+    setEstimateInput(String(minutes));
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (title.trim()) {
-      addTask(title.trim(), estimateMinutes);
+    const trimmedTitle = title.trim();
+
+    // 空や不正値は弾く
+    const parsed = Number(estimateInput);
+    const validMinutes = Number.isFinite(parsed) && parsed > 0 ? parsed : estimateMinutes;
+
+    if (trimmedTitle && validMinutes > 0) {
+      addTask(trimmedTitle, validMinutes);
       setTitle('');
       setEstimateMinutes(15);
+      setEstimateInput('15');
     }
   };
 
@@ -56,9 +65,18 @@ export default function TaskInput() {
             ))}
           </div>
           <input
-            type="number"
-            value={estimateMinutes}
-            onChange={(e) => setEstimateMinutes(Number(e.target.value) || 0)}
+            type="text"
+            value={estimateInput}
+            onChange={(e) => {
+              const value = e.target.value;
+              // 半角数字と空文字だけ許可（全削除してから入力し直せるようにする）
+              if (/^\d*$/.test(value)) {
+                setEstimateInput(value);
+                if (value !== '') {
+                  setEstimateMinutes(Number(value));
+                }
+              }
+            }}
             min="1"
             className="w-full border border-black px-3 py-2 bg-white focus:outline-none focus:border-international-orange font-mono"
             placeholder="Custom limit (minutes)"

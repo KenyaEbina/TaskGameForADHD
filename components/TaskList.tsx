@@ -15,6 +15,15 @@ export default function TaskList() {
   const activeTasks = tasks.filter((task) => task.status !== 'completed');
   const runningTask = tasks.find((task) => task.status === 'running');
 
+  const totalEstimateMinutes = activeTasks.reduce(
+    (sum, task) => sum + task.estimateMinutes,
+    0
+  );
+  const totalActualSeconds = activeTasks.reduce(
+    (sum, task) => sum + task.actualSeconds,
+    0
+  );
+
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
@@ -36,7 +45,23 @@ export default function TaskList() {
 
   return (
     <div className="border border-black bg-white p-4">
-      <h2 className="text-sm font-bold mb-4 uppercase tracking-wide font-mono">MISSION QUEUE</h2>
+      <div className="flex items-baseline justify-between mb-4">
+        <h2 className="text-sm font-bold uppercase tracking-wide font-mono">
+          MISSION QUEUE
+        </h2>
+        <div className="text-xs text-gray-700 font-mono text-right space-y-0.5">
+          <div>
+            TOTAL LIMIT:{' '}
+            <span className="font-bold">{totalEstimateMinutes}m</span>
+          </div>
+          <div>
+            TOTAL ELAPSED:{' '}
+            <span className="font-bold">
+              {formatTime(totalActualSeconds)}
+            </span>
+          </div>
+        </div>
+      </div>
 
       <div className="space-y-2">
         {activeTasks.map((task) => (
