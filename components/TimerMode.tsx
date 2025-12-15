@@ -105,7 +105,7 @@ const TimerMode = forwardRef<TimerModeRef, TimerModeProps>(
       };
     }, [runningTask?.id, runningTask?.status, onSave]);
 
-    const estimateSeconds = runningTask.estimateMinutes * 60;
+    const estimateSeconds = runningTask!.estimateMinutes * 60;
     const remainingSeconds = estimateSeconds - currentSeconds;
     const isOverTime = remainingSeconds < 0; // 0秒を超えたら延長戦モード
     const overtimeSeconds = isOverTime ? Math.abs(remainingSeconds) : 0;
