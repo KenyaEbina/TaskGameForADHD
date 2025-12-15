@@ -2,11 +2,15 @@
   "name": "taskgame-for-adhd",
   "version": "0.1.0",
   "private": true,
+  "main": "electron/main.js",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "dev:electron": "concurrently -k \"next dev\" \"wait-on http://localhost:3000 && electron .\"",
+    "build:renderer": "next build",
+    "build:mac": "npm run build:renderer && electron-builder --mac"
   },
   "dependencies": {
     "next": "^14.2.0",
@@ -22,6 +26,26 @@
     "autoprefixer": "^10.4.17",
     "postcss": "^8.4.33",
     "tailwindcss": "^3.4.1",
-    "typescript": "^5.3.3"
+    "typescript": "^5.3.3",
+    "electron": "^31.0.0",
+    "electron-builder": "^24.13.3",
+    "concurrently": "^8.2.2",
+    "wait-on": "^7.2.0"
+  },
+  "build": {
+    "appId": "com.example.taskgameforadhd",
+    "productName": "TaskGame for ADHD",
+    "directories": {
+      "output": "dist-electron"
+    },
+    "files": [
+      "electron/**/*",
+      "out/**/*",
+      "package.json"
+    ],
+    "mac": {
+      "target": "dmg",
+      "category": "public.app-category.productivity"
+    }
   }
 }

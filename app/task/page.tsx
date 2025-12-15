@@ -1,15 +1,16 @@
-'use client';
+ 'use client';
 
-import { useParams, useRouter } from 'next/navigation';
-import { useEffect, useRef } from 'react';
+import { Suspense, useEffect, useRef } from 'react';
+import { useSearchParams, useRouter } from 'next/navigation';
 import TimerMode, { TimerModeRef } from '@/components/TimerMode';
 import { useTaskStore } from '@/store/taskStore';
 import { ArrowLeft, Pause, Check } from 'lucide-react';
 
-export default function TaskDetailPage() {
-  const params = useParams();
+function TaskDetailContent() {
+  const searchParams = useSearchParams();
   const router = useRouter();
-  const taskId = params.id as string;
+  const taskId = searchParams.get('id') ?? '';
+
   const tasks = useTaskStore((state) => state.tasks);
   const startTask = useTaskStore((state) => state.startTask);
   const stopTask = useTaskStore((state) => state.stopTask);
@@ -24,7 +25,7 @@ export default function TaskDetailPage() {
       // ページにアクセスしたら自動的にタイマーを開始
       startTask(task.id);
     }
-  }, [task?.id, startTask]);
+  }, [task?.id, task?.status, startTask]);
 
   const handlePauseAndSave = () => {
     if (!task || !timerRef.current) return;
@@ -71,8 +72,8 @@ export default function TaskDetailPage() {
 
   if (!task) {
     return (
-      <main className="min-h-screen p-8">
-        <div className="max-w-4xl mx-auto">
+      <main className="min-h-screen flex items-center justify-center p-8">
+        <div className="w-full max-w-6xl mx-auto">
           <div className="border border-black bg-white p-8 text-center">
             <p className="text-sm text-gray-500 mb-4">Task not found</p>
             <button
@@ -88,8 +89,8 @@ export default function TaskDetailPage() {
   }
 
   return (
-    <main className="min-h-screen p-8 pb-20">
-      <div className="max-w-4xl mx-auto">
+    <main className="min-h-screen flex items-center justify-center p-8 pb-24">
+      <div className="w-full max-w-6xl mx-auto">
         <div className="mb-6">
           <button
             onClick={() => router.push('/list')}
@@ -135,5 +136,25 @@ export default function TaskDetailPage() {
         </div>
       </div>
     </main>
+  );
+}
+
+export default function TaskDetailPage() {
+  return (
+    <Suspense
+      fallback={
+        <main className="min-h-screen p-8">
+          <div className="max-w-4xl mx-auto">
+            <div className="border border-black bg-white p-8 text-center">
+              <p className="text-sm text-gray-500 mb-4 font-mono">
+                LOADING MISSION CONSOLE...
+              </p>
+            </div>
+          </div>
+        </main>
+      }
+    >
+      <TaskDetailContent />
+    </Suspense>
   );
 }

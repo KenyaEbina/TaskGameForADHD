@@ -7,8 +7,8 @@ import { Plus } from 'lucide-react';
 
 export default function Home() {
   return (
-    <main className="min-h-screen p-8 pb-20">
-      <div className="max-w-4xl mx-auto">
+    <main className="min-h-screen flex items-center justify-center p-8 pb-24">
+      <div className="w-full max-w-6xl mx-auto">
         <header className="mb-8 border-b border-black pb-4">
           <h1 className="text-3xl font-mono font-bold">FOCUS TERMINAL / V.1.0</h1>
           <p className="text-sm text-gray-600 mt-2 font-mono uppercase">NEURAL OVERCLOCK SYSTEM</p>

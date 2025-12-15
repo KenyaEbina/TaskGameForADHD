@@ -207,7 +207,7 @@ export default function TaskList() {
                   </button>
                 ) : (
                   <Link
-                    href={`/task/${task.id}`}
+                    href={`/task?id=${task.id}`}
                     className="border border-black px-3 py-1 text-xs uppercase transition-colors bg-white hover:bg-gray-100 inline-flex items-center font-mono"
                   >
                     <Play size={12} className="inline mr-1" />

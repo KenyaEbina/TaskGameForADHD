@@ -80,17 +80,6 @@ const TimerMode = forwardRef<TimerModeRef, TimerModeProps>(({ onSave }, ref) => 
     };
   }, [runningTask?.id, runningTask?.status, onSave]);
 
-  // runningTaskが変わったら、startTimeRefをリセット
-  useEffect(() => {
-    if (runningTask) {
-      startTimeRef.current = null;
-      savedRef.current = false;
-      runningTaskIdRef.current = null;
-    } else {
-      runningTaskIdRef.current = null;
-    }
-  }, [runningTask?.id]);
-
   if (!runningTask) {
     return (
       <div className="border border-black bg-white p-8">
