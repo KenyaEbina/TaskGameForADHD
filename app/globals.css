@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=VT323&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=VT323&display=swap");
 
 @tailwind base;
 @tailwind components;
@@ -6,6 +6,10 @@
 
 @layer base {
   body {
-    @apply bg-light-gray font-mono text-black antialiased;
+    @apply bg-light-gray font-mono text-black antialiased transition-colors duration-200;
+  }
+
+  html.dark body {
+    @apply bg-neutral-900 text-gray-100;
   }
 }

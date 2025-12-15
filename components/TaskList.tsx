@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { Play, Pause, Check, RotateCcw, Trash2 } from 'lucide-react';
-import Link from 'next/link';
-import { useTaskStore, Task } from '@/store/taskStore';
+import { useState } from "react";
+import { Play, Pause, Check, RotateCcw, Trash2 } from "lucide-react";
+import Link from "next/link";
+import { useTaskStore, Task } from "@/store/taskStore";
 
 export default function TaskList() {
   const tasks = useTaskStore((state) => state.tasks);
@@ -20,8 +20,8 @@ export default function TaskList() {
   const [editingTitleId, setEditingTitleId] = useState<string | null>(null);
   const [editingLimitId, setEditingLimitId] = useState<string | null>(null);
 
-  const activeTasks = tasks.filter((task) => task.status !== 'completed');
-  const runningTask = tasks.find((task) => task.status === 'running');
+  const activeTasks = tasks.filter((task) => task.status !== "completed");
+  const runningTask = tasks.find((task) => task.status === "running");
 
   const totalEstimateMinutes = activeTasks.reduce(
     (sum, task) => sum + task.estimateMinutes,
@@ -35,7 +35,9 @@ export default function TaskList() {
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
-    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    return `${mins.toString().padStart(2, "0")}:${secs
+      .toString()
+      .padStart(2, "0")}`;
   };
 
   const handlePause = (task: Task) => {
@@ -44,29 +46,31 @@ export default function TaskList() {
 
   if (activeTasks.length === 0) {
     return (
-      <div className="border border-black bg-white p-4">
-        <h2 className="text-sm font-bold mb-4 uppercase tracking-wide font-mono">MISSION QUEUE</h2>
-        <p className="text-sm text-gray-500 text-center py-8 font-mono">QUEUE EMPTY. AWAITING INPUT.</p>
+      <div className="border border-black dark:border-te-border-dark bg-white dark:bg-te-surface-dark p-4">
+        <h2 className="text-sm font-bold mb-4 uppercase tracking-wide font-mono text-black dark:text-te-text-main-dark">
+          MISSION QUEUE
+        </h2>
+        <p className="text-sm text-gray-500 dark:text-te-text-muted-dark text-center py-8 font-mono">
+          QUEUE EMPTY. AWAITING INPUT.
+        </p>
       </div>
     );
   }
 
   return (
-    <div className="border border-black bg-white p-4">
+    <div className="border border-black dark:border-te-border-dark bg-white dark:bg-te-surface-dark p-4">
       <div className="flex items-baseline justify-between mb-4">
-        <h2 className="text-sm font-bold uppercase tracking-wide font-mono">
+        <h2 className="text-sm font-bold uppercase tracking-wide font-mono text-black dark:text-te-text-main-dark">
           MISSION QUEUE
         </h2>
-        <div className="text-xs text-gray-700 font-mono text-right space-y-0.5">
+        <div className="text-xs text-gray-700 dark:text-te-text-muted-dark font-mono text-right space-y-0.5">
           <div>
-            TOTAL LIMIT:{' '}
+            TOTAL LIMIT:{" "}
             <span className="font-bold">{totalEstimateMinutes}m</span>
           </div>
           <div>
-            TOTAL ELAPSED:{' '}
-            <span className="font-bold">
-              {formatTime(totalActualSeconds)}
-            </span>
+            TOTAL ELAPSED:{" "}
+            <span className="font-bold">{formatTime(totalActualSeconds)}</span>
           </div>
         </div>
       </div>
@@ -75,18 +79,18 @@ export default function TaskList() {
         {activeTasks.map((task) => (
           <div
             key={task.id}
-            className={`border p-3 font-mono text-sm transition-all duration-150 cursor-grab ${
-              task.status === 'running'
-                ? 'bg-international-orange bg-opacity-10 border-international-orange'
-                : 'bg-white border-black'
+            className={`border p-3 font-mono text-sm transition-all duration-150 cursor-grab bg-white dark:bg-te-surface-dark dark:border-te-border-dark ${
+              task.status === "running"
+                ? "bg-international-orange bg-opacity-10 border-international-orange"
+                : "border-black"
             } ${
               draggingId === task.id
-                ? 'cursor-grabbing opacity-80 ring-2 ring-international-orange'
-                : ''
+                ? "cursor-grabbing opacity-80 ring-2 ring-international-orange"
+                : ""
             } ${
               dropTargetId === task.id && draggingId && draggingId !== task.id
-                ? 'border-dashed border-2 border-international-orange bg-orange-50'
-                : ''
+                ? "border-dashed border-2 border-international-orange bg-orange-50"
+                : ""
             }`}
             draggable
             onDragStart={() => {
@@ -94,7 +98,11 @@ export default function TaskList() {
             }}
             onDragOver={(e) => {
               e.preventDefault();
-              if (draggingId && draggingId !== task.id && dropTargetId !== task.id) {
+              if (
+                draggingId &&
+                draggingId !== task.id &&
+                dropTargetId !== task.id
+              ) {
                 setDropTargetId(task.id);
               }
             }}
@@ -128,7 +136,7 @@ export default function TaskList() {
                     }
                     onBlur={() => setEditingTitleId(null)}
                     onKeyDown={(e) => {
-                      if (e.key === 'Enter' || e.key === 'Escape') {
+                      if (e.key === "Enter" || e.key === "Escape") {
                         setEditingTitleId(null);
                       }
                     }}
@@ -141,7 +149,9 @@ export default function TaskList() {
                     className="w-full text-left font-bold mb-1 hover:bg-gray-50 px-1 py-0.5 rounded"
                     title="ダブルクリックでタイトル編集"
                   >
-                    {task.title || <span className="text-gray-400">Untitled mission</span>}
+                    {task.title || (
+                      <span className="text-gray-400">Untitled mission</span>
+                    )}
                   </button>
                 )}
 
@@ -154,27 +164,27 @@ export default function TaskList() {
                         className="w-14 border border-international-orange bg-white px-1 py-0.5 text-xs font-mono focus:outline-none"
                         value={task.estimateMinutes.toString()}
                         onChange={(e) => {
-                          const v = e.target.value.replace(/[^0-9]/g, '');
-                          const num = v === '' ? 0 : Number(v);
+                          const v = e.target.value.replace(/[^0-9]/g, "");
+                          const num = v === "" ? 0 : Number(v);
                           updateTaskMeta(task.id, {
                             estimateMinutes: num > 0 ? num : 0,
                           });
                         }}
                         onBlur={() => setEditingLimitId(null)}
                         onKeyDown={(e) => {
-                          if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+                          if (e.key === "ArrowUp" || e.key === "ArrowDown") {
                             e.preventDefault();
                             const step = e.shiftKey ? 10 : 1;
                             const current = task.estimateMinutes || 0;
                             const next =
-                              e.key === 'ArrowUp'
+                              e.key === "ArrowUp"
                                 ? Math.max(1, current + step)
                                 : Math.max(1, current - step);
                             updateTaskMeta(task.id, { estimateMinutes: next });
                             return;
                           }
 
-                          if (e.key === 'Enter' || e.key === 'Escape') {
+                          if (e.key === "Enter" || e.key === "Escape") {
                             setEditingLimitId(null);
                           }
                         }}
@@ -197,10 +207,10 @@ export default function TaskList() {
               </div>
 
               <div className="flex gap-1">
-                {task.status === 'running' ? (
+                {task.status === "running" ? (
                   <button
                     onClick={() => handlePause(task)}
-                    className="border border-black px-3 py-1 text-xs uppercase transition-colors bg-international-orange text-white border-international-orange"
+                    className="border border-black px-3 py-1 text-xs uppercase transition-colors bg-international-orange text-white border-international-orange dark:shadow-[0_0_8px_rgba(255,79,0,0.6)]"
                   >
                     <Pause size={12} className="inline mr-1" />
                     Pause
@@ -208,7 +218,7 @@ export default function TaskList() {
                 ) : (
                   <Link
                     href={`/task?id=${task.id}`}
-                    className="border border-black px-3 py-1 text-xs uppercase transition-colors bg-white hover:bg-gray-100 inline-flex items-center font-mono"
+                    className="border border-black px-3 py-1 text-xs uppercase transition-colors bg-white hover:bg-gray-100 inline-flex items-center font-mono dark:bg-black dark:text-te-text-main-dark dark:border-te-border-dark dark:hover:bg-te-border-dark"
                   >
                     <Play size={12} className="inline mr-1" />
                     ENGAGE

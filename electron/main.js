@@ -1,4 +1,11 @@
-const { app, BrowserWindow } = require("electron");
+const {
+  app,
+  BrowserWindow,
+  ipcMain,
+  Notification,
+  Tray,
+  nativeImage,
+} = require("electron");
 const path = require("path");
 const http = require("http");
 const fs = require("fs");
@@ -12,6 +19,9 @@ let mainWindow = null;
 /** @type {http.Server | null} */
 let staticServer = null;
 let staticServerPort = null;
+
+/** @type {Tray | null} */
+let tray = null;
 
 /**
  * out ディレクトリをシンプルな HTTP サーバーとして配信
@@ -88,6 +98,7 @@ function createWindow() {
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,
+      preload: path.join(__dirname, "preload.js"),
     },
   });
 
@@ -111,6 +122,13 @@ app.whenReady().then(async () => {
     await startStaticServer();
   }
 
+  // macOS メニューバー用のトレイアイコン（残り時間表示）
+  if (!tray && process.platform === "darwin") {
+    const emptyIcon = nativeImage.createEmpty();
+    tray = new Tray(emptyIcon);
+    tray.setTitle("READY");
+  }
+
   createWindow();
 
   app.on("activate", () => {
@@ -132,4 +150,34 @@ app.on("before-quit", () => {
     staticServer.close();
     staticServer = null;
   }
+
+  if (tray) {
+    tray.destroy();
+    tray = null;
+  }
+});
+
+// タイマーの残り時間をメニューバーに表示
+ipcMain.on("timer:update-remaining", (_event, seconds) => {
+  if (!tray || typeof seconds !== "number") return;
+
+  const safeSeconds = Math.max(0, Math.floor(seconds));
+  const mins = Math.floor(safeSeconds / 60)
+    .toString()
+    .padStart(2, "0");
+  const secs = (safeSeconds % 60).toString().padStart(2, "0");
+
+  tray.setTitle(`${mins}:${secs}`);
+});
+
+// タイムアップ時の通知
+ipcMain.on("timer:notify-finished", (_event, payload) => {
+  const { title, body } = payload || {};
+
+  if (!Notification.isSupported()) return;
+
+  new Notification({
+    title: title || "TIME UP",
+    body: body || "Time limit reached.",
+  }).show();
 });

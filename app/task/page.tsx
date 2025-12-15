@@ -1,15 +1,15 @@
- 'use client';
+"use client";
 
-import { Suspense, useEffect, useRef } from 'react';
-import { useSearchParams, useRouter } from 'next/navigation';
-import TimerMode, { TimerModeRef } from '@/components/TimerMode';
-import { useTaskStore } from '@/store/taskStore';
-import { ArrowLeft, Pause, Check } from 'lucide-react';
+import { Suspense, useEffect, useRef } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
+import TimerMode, { TimerModeRef } from "@/components/TimerMode";
+import { useTaskStore } from "@/store/taskStore";
+import { ArrowLeft, Pause, Check } from "lucide-react";
 
 function TaskDetailContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const taskId = searchParams.get('id') ?? '';
+  const taskId = searchParams.get("id") ?? "";
 
   const tasks = useTaskStore((state) => state.tasks);
   const startTask = useTaskStore((state) => state.startTask);
@@ -21,7 +21,7 @@ function TaskDetailContent() {
   const timerRef = useRef<TimerModeRef>(null);
 
   useEffect(() => {
-    if (task && task.status !== 'running') {
+    if (task && task.status !== "running") {
       // ページにアクセスしたら自動的にタイマーを開始
       startTask(task.id);
     }
@@ -43,7 +43,7 @@ function TaskDetailContent() {
 
     // 少し待ってからページ移動（状態更新を確実にする）
     setTimeout(() => {
-      router.push('/list');
+      router.push("/list");
     }, 100);
   };
 
@@ -66,7 +66,7 @@ function TaskDetailContent() {
 
     // 少し待ってからページ移動（状態更新を確実にする）
     setTimeout(() => {
-      router.push('/list');
+      router.push("/list");
     }, 100);
   };
 
@@ -74,11 +74,13 @@ function TaskDetailContent() {
     return (
       <main className="min-h-screen flex items-center justify-center p-8">
         <div className="w-full max-w-6xl mx-auto">
-          <div className="border border-black bg-white p-8 text-center">
-            <p className="text-sm text-gray-500 mb-4">Task not found</p>
+          <div className="border border-black dark:border-te-border-dark bg-white dark:bg-te-surface-dark p-8 text-center">
+            <p className="text-sm text-gray-500 dark:text-te-text-muted-dark mb-4">
+              Task not found
+            </p>
             <button
-              onClick={() => router.push('/list')}
-              className="border border-black px-4 py-2 text-sm uppercase font-mono hover:bg-gray-100"
+              onClick={() => router.push("/list")}
+              className="border border-black dark:border-te-border-dark px-4 py-2 text-sm uppercase font-mono hover:bg-gray-100 dark:hover:bg-te-border-dark"
             >
               Back to List
             </button>
@@ -93,7 +95,7 @@ function TaskDetailContent() {
       <div className="w-full max-w-6xl mx-auto">
         <div className="mb-6">
           <button
-            onClick={() => router.push('/list')}
+            onClick={() => router.push("/list")}
             className="flex items-center gap-2 text-sm font-mono uppercase tracking-wide hover:text-international-orange transition-colors"
           >
             <ArrowLeft size={16} />
@@ -102,8 +104,12 @@ function TaskDetailContent() {
         </div>
 
         <header className="mb-12 text-center">
-          <h1 className="text-4xl font-mono font-bold mb-4 uppercase">{task.title}</h1>
-          <p className="text-sm text-gray-600 font-mono uppercase">TIME LIMIT: {task.estimateMinutes} MIN</p>
+          <h1 className="text-4xl font-mono font-bold mb-4 uppercase text-black dark:text-te-text-main-dark">
+            {task.title}
+          </h1>
+          <p className="text-sm text-gray-600 dark:text-te-text-muted-dark font-mono uppercase">
+            TIME LIMIT: {task.estimateMinutes} MIN
+          </p>
         </header>
 
         <div className="max-w-2xl mx-auto">
@@ -121,14 +127,14 @@ function TaskDetailContent() {
         <div className="max-w-2xl mx-auto mt-6 flex gap-4 justify-center">
           <button
             onClick={handlePauseAndSave}
-            className="flex items-center gap-2 border border-black bg-white px-6 py-3 font-mono text-sm uppercase tracking-wide hover:bg-gray-100 transition-colors"
+            className="flex items-center gap-2 border border-black dark:border-te-border-dark bg-white dark:bg-te-surface-dark dark:text-te-text-main-dark px-6 py-3 font-mono text-sm uppercase tracking-wide hover:bg-gray-100 dark:hover:bg-te-border-dark transition-colors"
           >
             <Pause size={16} />
             PAUSE & SAVE
           </button>
           <button
             onClick={handleComplete}
-            className="flex items-center gap-2 border border-black bg-black text-white px-6 py-3 font-mono text-sm uppercase tracking-wide hover:bg-international-orange hover:border-international-orange transition-colors"
+            className="flex items-center gap-2 border border-black bg-international-orange text-white px-6 py-3 font-mono text-sm uppercase tracking-wide hover:bg-orange-500 hover:border-orange-500 transition-colors dark:bg-te-accent dark:border-te-accent dark:shadow-[0_0_10px_rgba(255,79,0,0.8)]"
           >
             <Check size={16} />
             COMPLETE
