@@ -23,6 +23,9 @@ let staticServerPort = null;
 /** @type {Tray | null} */
 let tray = null;
 
+// 本番用のローカルHTTPサーバーのポート
+const STATIC_PORT = 43210;
+
 /**
  * out ディレクトリをシンプルな HTTP サーバーとして配信
  * （file:// 直読みだとルーティングが壊れるため）
@@ -76,15 +79,14 @@ function startStaticServer() {
       });
     });
 
-    staticServer.listen(0, () => {
-      const address = staticServer.address();
-      if (address && typeof address.port === "number") {
-        staticServerPort = address.port;
+    staticServer
+      .listen(STATIC_PORT, "127.0.0.1", () => {
+        staticServerPort = STATIC_PORT;
         resolve(staticServerPort);
-      } else {
-        reject(new Error("Failed to start static server"));
-      }
-    });
+      })
+      .on("error", (err) => {
+        reject(err);
+      });
   });
 }
 
