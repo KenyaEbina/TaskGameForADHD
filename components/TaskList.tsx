@@ -228,7 +228,7 @@ export default function TaskList() {
                 {task.actualSeconds > 0 && (
                   <button
                     onClick={() => completeTask(task.id)}
-                    className="border border-black px-3 py-1 text-xs uppercase bg-white hover:bg-green-100 transition-colors"
+                    className="border border-black px-3 py-1 text-xs uppercase bg-gray-800 text-white hover:bg-green-600 transition-colors"
                     title="Complete"
                   >
                     <Check size={12} />
@@ -237,7 +237,7 @@ export default function TaskList() {
 
                 <button
                   onClick={() => resetTask(task.id)}
-                  className="border border-black px-3 py-1 text-xs uppercase bg-white hover:bg-gray-100 transition-colors"
+                  className="border border-black px-3 py-1 text-xs uppercase bg-gray-700 text-white hover:bg-gray-500 transition-colors"
                   title="Reset"
                 >
                   <RotateCcw size={12} />
@@ -245,7 +245,7 @@ export default function TaskList() {
 
                 <button
                   onClick={() => deleteTask(task.id)}
-                  className="border border-black px-3 py-1 text-xs uppercase bg-white hover:bg-red-100 transition-colors"
+                  className="border border-black px-3 py-1 text-xs uppercase bg-gray-700 text-white hover:bg-red-600 transition-colors"
                   title="Delete"
                 >
                   <Trash2 size={12} />
