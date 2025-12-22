@@ -4,6 +4,7 @@ import { Suspense, useEffect, useRef } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import TimerMode, { TimerModeRef } from "@/components/TimerMode";
 import { useTaskStore } from "@/store/taskStore";
+import { useDailyCheckInStore, getTodayDateString } from "@/store/dailyCheckInStore";
 import { ArrowLeft, Pause, Check } from "lucide-react";
 
 function TaskDetailContent() {
@@ -16,6 +17,7 @@ function TaskDetailContent() {
   const stopTask = useTaskStore((state) => state.stopTask);
   const addElapsedTime = useTaskStore((state) => state.addElapsedTime);
   const completeTask = useTaskStore((state) => state.completeTask);
+  const addWorkTime = useDailyCheckInStore((state) => state.addWorkTime);
 
   const task = tasks.find((t) => t.id === taskId);
   const timerRef = useRef<TimerModeRef>(null);
@@ -36,6 +38,9 @@ function TaskDetailContent() {
     if (elapsedSeconds > 0) {
       // 経過時間を加算
       addElapsedTime(task.id, elapsedSeconds);
+      // 日次チェックインに記録
+      const today = getTodayDateString();
+      addWorkTime(today, elapsedSeconds);
     }
 
     // タイマーを停止（これによりクリーンアップ処理で保存されないようにする）
@@ -56,6 +61,9 @@ function TaskDetailContent() {
     if (elapsedSeconds > 0) {
       // 経過時間を加算
       addElapsedTime(task.id, elapsedSeconds);
+      // 日次チェックインに記録
+      const today = getTodayDateString();
+      addWorkTime(today, elapsedSeconds);
     }
 
     // タイマーを停止
@@ -118,6 +126,9 @@ function TaskDetailContent() {
             onSave={(elapsedSeconds) => {
               if (elapsedSeconds > 0) {
                 addElapsedTime(task.id, elapsedSeconds);
+                // 日次チェックインにも記録（念のため）
+                const today = getTodayDateString();
+                addWorkTime(today, elapsedSeconds);
               }
             }}
           />

@@ -129,7 +129,7 @@ export default function TaskList() {
                 {editingTitleId === task.id ? (
                   <input
                     autoFocus
-                    className="w-full bg-white border border-international-orange px-2 py-1 text-sm font-bold focus:outline-none"
+                    className="w-full bg-white dark:bg-black border border-international-orange dark:border-te-accent px-2 py-1 text-sm font-bold focus:outline-none text-black dark:text-te-text-main-dark"
                     value={task.title}
                     onChange={(e) =>
                       updateTaskMeta(task.id, { title: e.target.value })
@@ -146,7 +146,7 @@ export default function TaskList() {
                   <button
                     type="button"
                     onDoubleClick={() => setEditingTitleId(task.id)}
-                    className="w-full text-left font-bold mb-1 hover:bg-gray-50 px-1 py-0.5 rounded"
+                    className="w-full text-left font-bold mb-1 hover:bg-gray-50 dark:hover:bg-te-border-dark px-1 py-0.5 rounded text-black dark:text-te-text-main-dark"
                     title="ダブルクリックでタイトル編集"
                   >
                     {task.title || (
@@ -161,7 +161,7 @@ export default function TaskList() {
                     {editingLimitId === task.id ? (
                       <input
                         autoFocus
-                        className="w-14 border border-international-orange bg-white px-1 py-0.5 text-xs font-mono focus:outline-none"
+                        className="w-14 border border-international-orange dark:border-te-accent bg-white dark:bg-black dark:text-te-text-main-dark px-1 py-0.5 text-xs font-mono focus:outline-none"
                         value={task.estimateMinutes.toString()}
                         onChange={(e) => {
                           const v = e.target.value.replace(/[^0-9]/g, "");
@@ -193,7 +193,7 @@ export default function TaskList() {
                       <button
                         type="button"
                         onDoubleClick={() => setEditingLimitId(task.id)}
-                        className="inline-flex items-center gap-1 px-1 py-0.5 rounded hover:bg-gray-50"
+                        className="inline-flex items-center gap-1 px-1 py-0.5 rounded hover:bg-gray-50 dark:hover:bg-te-border-dark text-gray-600 dark:text-te-text-muted-dark"
                         title="ダブルクリックで時間編集"
                       >
                         <span>{task.estimateMinutes}</span>

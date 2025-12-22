@@ -3,6 +3,7 @@
 import Link from "next/link";
 import DashboardStats from "@/components/DashboardStats";
 import ReceiptView from "@/components/ReceiptView";
+import CheckInCalendar from "@/components/CheckInCalendar";
 import { Plus } from "lucide-react";
 
 export default function Home() {
@@ -28,6 +29,11 @@ export default function Home() {
             <Plus size={16} />
             NEW TASK
           </Link>
+        </div>
+
+        {/* チェックインカレンダー */}
+        <div className="mb-12">
+          <CheckInCalendar />
         </div>
 
         <div className="mt-12">
